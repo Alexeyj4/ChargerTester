@@ -213,6 +213,13 @@ void test(){
   delay(500);
 
   //8.4v test (end of charge)
+  display.setCursor(0,first_string);  
+  display.print("zel migaet?");
+  display.display();
+  while(!btn()){
+    if(ce())return;
+  }
+  
   display.clearDisplay();
   display.display();
   load(0);delay(100);u84(1);  
@@ -221,15 +228,20 @@ void test(){
   display.setCursor(0,second_string);  
   display.print("ne migaet?");
   display.display();
-  while(ce()){
-    if(btn()){
+  while(!btn()){
+    if(ce()){
       u84(0);
-      if(ok==true){
-        green(1);red(0);
-      }else{
-        red(1);green(0);
-      }
-      delay(500);
+      return;
+    }  
+  }
+  u84(0);
+  
+//  if(ok==true){
+//    green(1);red(0);
+//  }else{
+//    red(1);green(0);
+//  }
+//      delay(500);
       return;      
     }
   }
