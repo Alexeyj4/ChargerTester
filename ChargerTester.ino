@@ -1,6 +1,10 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <Fonts/FreeSerif9pt7b.h>
+//#include <FontsRus/TimesNRCyr7.h>//high. not long
+#include <FontsRus/CourierCyr8.h>//long. not high
+//#include <FontsRus/FreeMono8.h>//long. not high
+//#include <FontsRus/FreeSans8.h>//high. not long
+//#include <FontsRus/FreeSerif8.h>//high. not long
 
 const float u_min=8.3;
 const float u_max=8.4;
@@ -45,21 +49,27 @@ void self_test(){
   display.clearDisplay();
   display.display();
   display.setCursor(0,first_string);  
-  display.println("eject charger");
-  display.print("self test");
-  display.display();
-  delay(500);  
+  display.cp437(true);  
+  display.println("калибровка..");
+  display.display();    
   load(0);
-  delay(500);
+  delay(100);
   u84(1);
-  delay(500);
+  delay(100);
+  if(ce()){
+  display.println("отключите зу");
+  display.display();
+    }
+  while(ce()){}
+  delay(100);
   float ut=u();//u temp
+  display.println(ut);    
   u84(0);
   if(ut>u_min and ut<u_max){
-    display.println(" ok");    
+    display.println("ok");    
     display.display();
   }else{
-    display.println(" bad");
+    display.println("плох");
     display.display();
     while(1){}
   }
@@ -81,7 +91,7 @@ void setup() {
   
   analogReference(INTERNAL); //1,1V internal
 
-  display.setFont(&FreeSerif9pt7b);
+  display.setFont(&CourierCyr8pt8b);
   display.setTextSize(1);             
   display.setTextColor(WHITE); 
   u();//init
@@ -119,11 +129,12 @@ void ntc(int s){ //on/off NTC pin resistor for test thermal protection
 }
 
 void show_welcome(){
+  red(0);green(0);
   display.clearDisplay();
   display.setCursor(0,first_string);  
-  display.println("Connect");
-  display.println("to charger");
-  display.display();
+  display.println("подключите");
+  display.println("зу");
+  display.display();  
 }
 
 float u(){  //measure U and transform to volts
@@ -142,28 +153,28 @@ void test(){
   display.clearDisplay();  
   display.display();
   display.setCursor(0,first_string);
-  delay(500);  
+  delay(100);  
 
   //u test
   load(0);
-  delay(500);  
+  delay(100);  
   float ut=u();//u temp
   display.print("U=");
   display.print(ut);
   if(ut>u_min and ut<u_max){
     display.println(" ok");    
   }else{
-    display.println(" bad");
+    display.println(" плох");
     ok=false;
     red(1);green(0);
   }
   display.display();
-  delay(500);
+  delay(250);
     
   //i test
-  delay(500);
+  delay(100);
   load(1);
-  delay(500);
+  delay(100);
   float it=i();//i temp
   load(0);
   display.print("I=");
@@ -171,68 +182,68 @@ void test(){
   if(it>i_min and it<i_max){
     display.println(" ok");    
   }else{
-    display.println(" bad");
+    display.println(" плох");
     ok=false;
     red(1);green(0);
   }
   display.display();
-  delay(500);
+  delay(100);
 
   //ntc test
   bool ntc_ok=true;
-  display.clearDisplay();
-  display.display();
-  display.setCursor(0,first_string); 
+//  display.clearDisplay();
+//  display.display();
+//  display.setCursor(0,first_string); 
   
   //part 1 - ntc u test
-  delay(500);
+  delay(100);
   load(0);
-  delay(500);
+  delay(100);
   ntc(1);
-  delay(500);
+  delay(250);
   ut=u();
-  ntc(0);   
-  display.print("U=");
+  ntc(0);     
   display.print(ut);
   if(ut<u_thr){
-    display.println(" ntc ok");
+    display.println("ntc ok");
   }else{
-    display.println(" ntc bad");
+    display.println("ntc плох");
     ntc_ok=false;
     ok=false;
     red(1);green(0);
   }  
   display.display(); 
-  delay(500); 
+  delay(100); 
   
   //part 2 - ntc i test
-  delay(500);
+  delay(100);
   load(1);
-  delay(500);
+  delay(100);
   ntc(1);
-  delay(500);
+  delay(100);
   it=i();
   load(0);
-  ntc(0);
-  display.print("I=");
+  ntc(0);  
   display.print(it);
     if(it<i_thr){
-    display.println(" ntc ok");
+    display.println("ntc ok");
   }else{
-    display.println(" ntc bad");
+    display.println("ntc плох");
     ntc_ok=false;
     ok=false;
     red(1);green(0);
   }
   
   display.display();
-  delay(500);
+  delay(1000);
 
   //8.4v test (end of charge)
   display.clearDisplay();
   display.display();  
   display.setCursor(0,first_string);  
-  display.print("zel migaet?");
+  display.println("на зу");
+  display.println("зеленый");
+  display.println("мигает?");
   display.display();
   while(!btn()){
     if(!ce())return;
@@ -240,10 +251,13 @@ void test(){
   
   display.clearDisplay();
   display.display();
-  load(0);delay(100);u84(1);  
+  load(0);
+  delay(100);
+  u84(1);  
   display.setCursor(0,first_string);  
-  display.println("zel gorit?");  
-  display.print("ne migaet?");
+  display.println("на зу");  
+  display.println("зел. горит?");  
+  display.print("не мигает?");
   display.display();
   while(!btn()){
     if(!ce()){
@@ -252,14 +266,15 @@ void test(){
     }  
   }
   u84(0);  
+  display.clearDisplay();  
+  display.setCursor(0,first_string); 
   if(ok==true){
     green(1);red(0);
+    display.println("тест - ok");
   }else{
     red(1);green(0);
-  }
-  display.clearDisplay();  
-  display.setCursor(0,first_string);  
-  display.println("test - ok");   
+    display.println("тест - плох");
+  }    
   display.display();
   while(ce()){};
   red(0);green(0); 
