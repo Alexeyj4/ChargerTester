@@ -33,7 +33,38 @@ const int second_string=28;  //second string on LCD
 const int third_string=44;  //third string on LCD
 const int fourth_string=62;  //fourth string on LCD
 
+bool ce();
+float u();
+void load(int s);
+void u84(int s);
+
+
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+
+void self_test(){
+  display.clearDisplay();
+  display.display();
+  display.setCursor(0,first_string);  
+  display.println("eject charger");
+  display.print("self test");
+  display.display();
+  delay(500);  
+  load(0);
+  delay(500);
+  u84(1);
+  delay(500);
+  float ut=u();//u temp
+  u84(0);
+  if(ut>u_min and ut<u_max){
+    display.println(" ok");    
+    display.display();
+  }else{
+    display.println(" bad");
+    display.display();
+    while(1){}
+  }
+  delay(1000);
+}  
 
 void setup() { 
   // put your setup code here, to run once: 
@@ -52,7 +83,9 @@ void setup() {
 
   display.setFont(&FreeSerif9pt7b);
   display.setTextSize(1);             
-  display.setTextColor(WHITE);   
+  display.setTextColor(WHITE); 
+  u();//init
+  i();//init
 }
 
 bool btn(){  //if button pressed return true
@@ -85,21 +118,6 @@ void ntc(int s){ //on/off NTC pin resistor for test thermal protection
   digitalWrite(ntc_pin,s);
 }
 
-void show(){
-  display.clearDisplay();
-  display.setCursor(0,first_string);  
-  display.print("U=");
-  display.print(analogRead(u_meas_pin));
-  display.setCursor(0,second_string); 
-  display.print("I=");
-  display.print(analogRead(i_meas_pin));
-  display.setCursor(0,third_string);
-  display.print("CE=");
-  display.print(digitalRead(ce_pin));
-  display.display();
-  
-}
-
 void show_welcome(){
   display.clearDisplay();
   display.setCursor(0,first_string);  
@@ -121,21 +139,21 @@ void test(){
   i();//init
   red(0);green(0);
   bool ok=true;
-  display.clearDisplay();
+  display.clearDisplay();  
   display.display();
+  display.setCursor(0,first_string);
   delay(500);  
 
   //u test
   load(0);
   delay(500);  
   float ut=u();//u temp
-  display.setCursor(0,first_string);  
   display.print("U=");
   display.print(ut);
   if(ut>u_min and ut<u_max){
-    display.print(" ok");    
+    display.println(" ok");    
   }else{
-    display.print(" bad");
+    display.println(" bad");
     ok=false;
     red(1);green(0);
   }
@@ -148,13 +166,12 @@ void test(){
   delay(500);
   float it=i();//i temp
   load(0);
-  display.setCursor(0,second_string);  
   display.print("I=");
   display.print(it);
   if(it>i_min and it<i_max){
-    display.print(" ok");    
+    display.println(" ok");    
   }else{
-    display.print(" bad");
+    display.println(" bad");
     ok=false;
     red(1);green(0);
   }
@@ -165,22 +182,22 @@ void test(){
   bool ntc_ok=true;
   display.clearDisplay();
   display.display();
+  display.setCursor(0,first_string); 
   
-  //ntc u test
+  //part 1 - ntc u test
   delay(500);
   load(0);
   delay(500);
   ntc(1);
   delay(500);
   ut=u();
-  ntc(0);  
-  display.setCursor(0,first_string);  
+  ntc(0);   
   display.print("U=");
   display.print(ut);
   if(ut<u_thr){
-    display.print(" ntc ok");
+    display.println(" ntc ok");
   }else{
-    display.print(" ntc bad");
+    display.println(" ntc bad");
     ntc_ok=false;
     ok=false;
     red(1);green(0);
@@ -188,7 +205,7 @@ void test(){
   display.display(); 
   delay(500); 
   
-  //ntc i test
+  //part 2 - ntc i test
   delay(500);
   load(1);
   delay(500);
@@ -197,13 +214,12 @@ void test(){
   it=i();
   load(0);
   ntc(0);
-  display.setCursor(0,second_string);  
   display.print("I=");
   display.print(it);
     if(it<i_thr){
-    display.print(" ntc ok");
+    display.println(" ntc ok");
   }else{
-    display.print(" ntc bad");
+    display.println(" ntc bad");
     ntc_ok=false;
     ok=false;
     red(1);green(0);
@@ -213,45 +229,46 @@ void test(){
   delay(500);
 
   //8.4v test (end of charge)
+  display.clearDisplay();
+  display.display();  
   display.setCursor(0,first_string);  
   display.print("zel migaet?");
   display.display();
   while(!btn()){
-    if(ce())return;
+    if(!ce())return;
   }
   
   display.clearDisplay();
   display.display();
   load(0);delay(100);u84(1);  
   display.setCursor(0,first_string);  
-  display.print("zel gorit?");
-  display.setCursor(0,second_string);  
+  display.println("zel gorit?");  
   display.print("ne migaet?");
   display.display();
   while(!btn()){
-    if(ce()){
+    if(!ce()){
       u84(0);
       return;
     }  
   }
-  u84(0);
-  
-//  if(ok==true){
-//    green(1);red(0);
-//  }else{
-//    red(1);green(0);
-//  }
-//      delay(500);
-      return;      
-    }
+  u84(0);  
+  if(ok==true){
+    green(1);red(0);
+  }else{
+    red(1);green(0);
   }
-  u84(0);     
-  
+  display.clearDisplay();  
+  display.setCursor(0,first_string);  
+  display.println("test - ok");   
+  display.display();
+  while(ce()){};
+  red(0);green(0); 
 }
 
 void loop() {  
   // put your main code here, to run repeatedly:
   u84(0);
+  self_test();
   show_welcome();
   while(!ce()){u84(0);}
   test();  
