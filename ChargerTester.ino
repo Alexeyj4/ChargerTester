@@ -6,10 +6,10 @@
 //#include <FontsRus/FreeSans8.h>//high. not long
 //#include <FontsRus/FreeSerif8.h>//high. not long
 
-const float u_min=8.3;
+const float u_min=8.28;
 const float u_max=8.4;
 const float i_min=1.20;
-const float i_max=1.30;
+const float i_max=1.38;
 
 const float u_thr=6.9;  //threshold when thermal protection on (NTC on)
 const float i_thr=0.05; //threshold when thermal protection on (NTC on)
@@ -157,7 +157,7 @@ void test(){
 
   //u test
   load(0);
-  delay(100);  
+  delay(500);  
   float ut=u();//u temp
   display.print("U=");
   display.print(ut);
@@ -235,7 +235,7 @@ void test(){
   }
   
   display.display();
-  delay(1000);
+  delay(2000);
 
   //8.4v test (end of charge)
   display.clearDisplay();
