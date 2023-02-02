@@ -7,7 +7,7 @@
 //#include <FontsRus/FreeSerif8.h>//high. not long
 
 const float u_min=8.28;
-const float u_max=8.4;
+const float u_max=8.5;
 const float i_min=1.20;
 const float i_max=1.38;
 
