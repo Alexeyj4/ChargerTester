@@ -799,7 +799,6 @@
     )
   )
 
-
   (junction (at 205.74 144.78) (diameter 0) (color 0 0 0 0)
     (uuid 0c6382d6-f067-42ba-9597-25983968e40d)
   )
@@ -1048,6 +1047,10 @@
   (wire (pts (xy 99.06 157.48) (xy 92.71 157.48))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 4b185d49-3da6-4388-bf18-63cb6c602420)
+  )
+  (wire (pts (xy 147.32 139.7) (xy 143.51 139.7))
+    (stroke (width 0) (type default) (color 0 0 0 0))
+    (uuid 4c24222a-4e7e-434f-98b9-9f771246bab5)
   )
   (wire (pts (xy 83.82 48.26) (xy 104.14 48.26))
     (stroke (width 0) (type default) (color 0 0 0 0))
@@ -1336,6 +1339,10 @@
     (uuid ead54a00-f1df-4547-95a9-899c0d12e700)
   )
 
+  (wire (pts (xy 133.35 139.7) (xy 135.89 139.7))
+    (stroke (width 0) (type default) (color 0 0 0 0))
+    (uuid eb5177bb-f5e6-4a5e-a9fb-739ece3fd5a1)
+  )
   (wire (pts (xy 175.26 50.8) (xy 179.07 50.8))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid eb87ee0f-6bb1-46f8-a1f5-0c21bc70ecb4)
@@ -1405,7 +1412,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 5cf45649-75fb-400e-9775-f0a8b19b0483)
   )
-  (label "load_on_pin D3 (3)" (at 133.35 139.7 0)
+  (label "load_on_pin D3 (3)" (at 147.32 139.7 90)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 5fe88b43-3e01-4a3f-94e3-aff489b52453)
   )
@@ -1802,6 +1809,21 @@
     (pin "1" (uuid 8c7f8137-9f8f-48e7-9c91-a48380fba421))
     (pin "2" (uuid f68faec3-e9b2-4df5-a39e-2931bec90160))
     (pin "3" (uuid d3a88e13-cd6c-461c-bb86-f20274431100))
+  )
+
+  (symbol (lib_id "Device:R") (at 139.7 139.7 90) (unit 1)
+    (in_bom yes) (on_board yes) (fields_autoplaced)
+    (uuid 7f093f1d-323b-4b4e-b33a-3f6815b22768)
+    (property "Reference" "R?" (id 0) (at 139.7 133.35 90))
+    (property "Value" "100 Ом" (id 1) (at 139.7 135.89 90))
+    (property "Footprint" "" (id 2) (at 139.7 141.478 90)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (id 3) (at 139.7 139.7 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 73cb09ad-e380-49f3-bc9d-038b1104bc93))
+    (pin "2" (uuid bad86c5b-550c-459d-ae24-5ea963bd342c))
   )
 
   (symbol (lib_id "Device:R") (at 104.14 62.23 0) (unit 1)
@@ -2295,6 +2317,9 @@
     )
     (path "/774610a1-2d08-43d6-b250-ad93b23c459e/e530b35d-139c-4bcd-8d7b-c4b1f210638a"
       (reference "R16") (unit 1) (value "2,7 кОм") (footprint "")
+    )
+    (path "/7f093f1d-323b-4b4e-b33a-3f6815b22768"
+      (reference "R?") (unit 1) (value "100 Ом") (footprint "")
     )
     (path "/5fd5bf5a-0e10-459c-b306-5d7f6469d475"
       (reference "SW1") (unit 1) (value "YES") (footprint "")
